@@ -1,0 +1,31 @@
+{
+  "name": "ejercicio-sls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dynamoDbInstall": "sls dynamodb install",
+    "dev": "sls offline start",
+    "devDebug": "SLS_DEBUG=* sls offline start --stage dev",
+    "deployDev": "SLS_DEBUG=* sls deploy --stage dev",
+    "lint": "eslint ./ --ext .js",
+    "lintFix": "npm run lint -- --fix"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.910.0",
+    "ebased": "^1.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "prettier": "^2.3.2",
+    "serverless": "^1.78.1",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-iam-roles-per-function": "^2.0.2",
+    "serverless-offline": "^7.0.0"
+  }
+}
