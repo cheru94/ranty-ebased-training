@@ -7,7 +7,7 @@
     "dynamoDbInstall": "sls dynamodb install",
     "dev": "sls offline start",
     "devDebug": "SLS_DEBUG=* sls offline start --stage dev",
-    "deployDev": "SLS_DEBUG=* sls deploy --stage dev",
+    "deployIntegration": "SLS_DEBUG=* sls deploy --stage dev",
     "lint": "eslint ./ --ext .js",
     "lintFix": "npm run lint -- --fix"
   },

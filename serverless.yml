@@ -1,5 +1,5 @@
 frameworkVersion: '1.78.1'
-service: ejercicio-sls
+service: ranty-ebased-training
 
 plugins:
   - serverless-iam-roles-per-function
