@@ -12,19 +12,21 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
-# only for local environment to use the dynamoDB plugin
-# custom:
-#   dynamodb:
-#    stages:
-#      - dev
-#    start:
-#      migrate: true
-#      seed: true
-#    seed:
-#      clientTable:
-#        sources:
-#          - table: !Ref ClientsTable.TableName
-#            sources: [./dynamo-seeds/clients.seeds.json]
+custom:
+  environment:
+    CLIENTS_TABLE_NAME: ${self:service}-${self:provider.stage}-client-table
+  # only for local environment to use the dynamoDB plugin
+  # dynamodb:
+  #   stages:
+  #     - dev
+  #   start:
+  #     migrate: true
+  #     seed: false
+  #   seed:
+  #     clientTable:
+  #       sources:
+  #         - table: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  #           sources: [./dynamo-seeds/clients.seeds.json]
 
 package:
   exclude:
@@ -38,7 +40,7 @@ package:
 
 functions:
   CreateClient:
-    handler: create-client/create-client.handler
+    handler: create-client/handler/create-client.handler
     name: ${self:service}-${self:provider.stage}-create-client-function
     events:
       - http:
@@ -46,7 +48,7 @@ functions:
           method: post
           cors: true
     environment:
-      CLIENTS_TABLE: !Ref ClientsTable
+      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
       CLIENTS_CREATED_TOPIC: !Ref ClientCreatedTopic
     iamRoleStatementsInherit: true
     iamRoleStatements:
@@ -68,7 +70,7 @@ functions:
       - sqs:
           arn: !GetAtt CreateCardQueue.Arn
     environment:
-      CLIENTS_TABLE: !Ref ClientsTable
+      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -84,7 +86,7 @@ functions:
       - sqs:
           arn: !GetAtt CreateGiftQueue.Arn
     environment:
-      CLIENTS_TABLE: !Ref ClientsTable
+      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
     iamRoleStatementsInherit: true
     iamRoleStatements:
       - Effect: Allow
@@ -98,7 +100,7 @@ resources:
     ClientsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${self:provider.stage}-client-table
+        TableName: ${self:custom.environment.CLIENTS_TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: dni
             AttributeType: S
