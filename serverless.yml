@@ -16,17 +16,17 @@ custom:
   environment:
     CLIENTS_TABLE_NAME: ${self:service}-${self:provider.stage}-client-table
   # only for local environment to use the dynamoDB plugin
-  dynamodb:
-    stages:
-      - dev
-    start:
-      migrate: true
-      seed: false
-    seed:
-      clientTable:
-        sources:
-          - table: ${self:custom.environment.CLIENTS_TABLE_NAME}
-            sources: [./dynamo-seeds/clients.seeds.json]
+  # dynamodb:
+  #   stages:
+  #     - dev
+  #   start:
+  #     migrate: true
+  #     seed: false
+  #   seed:
+  #     clientTable:
+  #       sources:
+  #         - table: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  #           sources: [./dynamo-seeds/clients.seeds.json]
 
 package:
   exclude:
