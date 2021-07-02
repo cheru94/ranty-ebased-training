@@ -1,0 +1,9 @@
+Resources:
+  CreateCardQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:service}-${self:provider.stage}-create-card-queue
+  UpdateCardQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:service}-${self:provider.stage}-update-card-queue

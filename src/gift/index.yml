@@ -1,0 +1,30 @@
+CreateGift:
+  handler: src/gift/handler/create-gift.handler
+  name: ${self:service}-${self:provider.stage}-create-gift-function
+  events:
+    - sqs:
+        arn: !GetAtt CreateGiftQueue.Arn
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn
+UpdateGift:
+  handler: src/gift/handler/update-gift.handler
+  name: ${self:service}-${self:provider.stage}-update-gift-function
+  events:
+    - sqs:
+        arn: !GetAtt UpdateGiftQueue.Arn
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn

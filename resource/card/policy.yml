@@ -1,0 +1,51 @@
+Resources:
+  CreateCardQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - SQS:*
+            Resource: !GetAtt CreateCardQueue.Arn
+            Principal:
+              AWS:
+                - !Ref AWS::AccountId
+          - Effect: Allow
+            Principal:
+              AWS:
+                - '*'
+            Action:
+              - SQS:SendMessage
+            Resource: !GetAtt CreateCardQueue.Arn
+            Condition:
+              ArnLike:
+                aws:SourceArn:
+                  - !Ref ClientCreatedTopic
+      Queues:
+        - !Ref CreateCardQueue
+  UpdateCardQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - SQS:*
+            Resource: !GetAtt UpdateCardQueue.Arn
+            Principal:
+              AWS:
+                - !Ref AWS::AccountId
+          - Effect: Allow
+            Principal:
+              AWS:
+                - '*'
+            Action:
+              - SQS:SendMessage
+            Resource: !GetAtt UpdateCardQueue.Arn
+            Condition:
+              ArnLike:
+                aws:SourceArn:
+                  - !Ref ClientUpdatedTopic
+      Queues:
+        - !Ref UpdateCardQueue
