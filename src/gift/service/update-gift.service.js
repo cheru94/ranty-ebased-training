@@ -15,15 +15,7 @@ const updateGiftService = async (dni, chosenGift) => {
     TableName: process.env.CLIENTS_TABLE,
     UpdateExpression: 'SET #G = :g',
   };
-  // eslint-disable-next-line no-console
-  console.debug(dbParams);
-  const dynamoResponse = await dynamoDB
-    .updateItem(dbParams)
-    // eslint-disable-next-line no-console
-    .catch((e) => console.debug(e));
-  // eslint-disable-next-line no-console
-  console.debug(`Response:${dynamoResponse}`);
-  console.debug(`SECOND:${dynamoResponse}`);
+  const dynamoResponse = await dynamoDB.updateItem(dbParams);
   return dynamoResponse;
 };
 
