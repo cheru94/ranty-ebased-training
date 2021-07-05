@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-new */
 const { StatusCodes } = require('http-status-codes');
 
@@ -16,6 +17,9 @@ const {
   publishClientPointsService,
 } = require('../service/publish-client-points.service');
 
+const {
+  invokeClientByIdService,
+} = require('../service/invoke-clientById.service');
 /**
  *
  * @param {*} commandPayload
@@ -25,20 +29,32 @@ const {
 const createPurchaseDomain = async (commandPayload, commandMeta) => {
   new CreatePurchaseValidation(commandPayload, commandMeta);
   const { paymentType, products, dni } = commandPayload;
+  const isActive = await isClientActive(dni, commandMeta);
+  if (!isActive) {
+    return {
+      status: StatusCodes.NOT_FOUND,
+      body: {
+        message: 'Active client not found',
+      },
+    };
+  }
   const { mappedProducts, total } = mappedProductDiscounts(
     paymentType,
     products
   );
   await createPurchaseService(mappedProducts, total, dni);
-  // eslint-disable-next-line no-use-before-define
   await validateThresholdPoints(commandPayload, commandMeta, total);
 
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       message: 'Purchase added succesfully',
     },
   };
+};
+const isClientActive = async (dni, commandMeta) => {
+  const { isActive } = await invokeClientByIdService(dni, commandMeta);
+  return isActive;
 };
 
 const validateThresholdPoints = async (commandPayload, commandMeta, total) => {

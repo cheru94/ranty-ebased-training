@@ -90,7 +90,7 @@ UpdateClient:
         - !Ref ClientUpdatedTopic
 GetByIdClient:
   handler: src/client/handler/getById-client.handler
-  name: ${self:service}-${self:provider.stage}-getById-client-function
+  name: ${self:custom.environment.GET_CLIENT_BY_ID_LAMBDA_NAME}
   events:
     - http:
         path: /client/{dni}

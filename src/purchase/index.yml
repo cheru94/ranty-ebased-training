@@ -13,6 +13,7 @@ CreatePurchase:
   environment:
     PURCHASE_TABLE: ${self:custom.environment.PURCHASES_TABLE_NAME}
     AMOUNT_REACHED_TOPIC: !Ref AmountReachedTopic
+    GET_CLIENT_BY_ID_LAMBDA_NAME: ${self:custom.environment.GET_CLIENT_BY_ID_LAMBDA_NAME}
   iamRoleStatementsInherit: true
   iamRoleStatements:
     - Effect: Allow
@@ -25,3 +26,8 @@ CreatePurchase:
         - dynamodb:PutItem
       Resource:
         - !GetAtt PurchasesTable.Arn
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - ${self:custom.environment.GET_CLIENT_BY_ID_LAMBDA_ARN}
