@@ -1,7 +1,7 @@
 const dynamoDB = require('ebased/service/storage/dynamo');
 
 const updateClientService = async (commandPayload) => {
-  const dynamoResponse = await dynamoDB.updateItem({
+  const params = {
     TableName: process.env.CLIENTS_TABLE,
     Key: { dni: commandPayload.dni },
     ExpressionAttributeNames: {
@@ -16,7 +16,8 @@ const updateClientService = async (commandPayload) => {
     },
     UpdateExpression: 'SET #nm = :name, #lm = :lastName, #bi = :birth',
     RetunValues: 'ALL_NEW',
-  });
+  };
+  const dynamoResponse = await dynamoDB.updateItem(params);
   return dynamoResponse;
 };
 
