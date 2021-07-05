@@ -14,9 +14,13 @@ const {
  * @returns
  */
 const updateClientPointsDomain = async (eventPayload, eventMeta) => {
-  console.debug(eventPayload);
-  new UpdateClientPointsValidation(eventPayload, eventMeta);
-  await updateClientPointService(eventPayload);
+  // *****************************************************************
+  // MOVE THIS TO THE HANDLER LAYER
+  const { Message } = eventPayload;
+  const message = JSON.parse(Message);
+  // *****************************************************************
+  new UpdateClientPointsValidation(message, eventMeta);
+  await updateClientPointService(message);
 
   return {
     statusCode: StatusCodes.OK,

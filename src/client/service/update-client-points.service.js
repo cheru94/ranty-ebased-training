@@ -1,7 +1,7 @@
 const dynamoDB = require('ebased/service/storage/dynamo');
 
 const updateClientPointService = async (commandPayload) => {
-  const dynamoResponse = await dynamoDB.updateItem({
+  const params = {
     TableName: process.env.CLIENTS_TABLE,
     Key: { dni: commandPayload.dni },
     ExpressionAttributeNames: {
@@ -10,9 +10,12 @@ const updateClientPointService = async (commandPayload) => {
     ExpressionAttributeValues: {
       ':p': commandPayload.points,
     },
-    UpdateExpression: 'ADD #p = :p',
-    RetunValues: 'UPDATED_CLIENT',
-  });
+    UpdateExpression: 'SET #p = #p + :p',
+    RetunValues: 'ALL_NEW',
+  };
+  // eslint-disable-next-line no-console
+  console.debug(params);
+  const dynamoResponse = await dynamoDB.updateItem(params);
   return dynamoResponse;
 };
 
