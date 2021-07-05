@@ -1,6 +1,6 @@
 const dynamoDB = require('ebased/service/storage/dynamo');
 
-const updateGiftService = async (dni, chosenGift) => {
+const setGiftService = async (dni, chosenGift) => {
   const dbParams = {
     ExpressionAttributeNames: {
       '#G': 'gift',
@@ -19,4 +19,4 @@ const updateGiftService = async (dni, chosenGift) => {
   return dynamoResponse;
 };
 
-module.exports = { updateGiftService };
+module.exports = { setGiftService };

@@ -15,6 +15,7 @@ provider:
 custom:
   environment:
     CLIENTS_TABLE_NAME: ${self:service}-${self:provider.stage}-client-table
+    PURCHASES_TABLE_NAME: ${self:service}-${self:provider.stage}-purchase-table
   # only for local environment to use the dynamoDB plugin
   # dynamodb:
   #   stages:
@@ -44,11 +45,15 @@ functions:
   - ${file(src/client/index.yml)}
   - ${file(src/card/index.yml)}
   - ${file(src/gift/index.yml)}
+  - ${file(src/purchase/index.yml)}
 
 resources:
-  - ${file(resource/client/repository.yml)}
+  - ${file(resource/client/table.yml)}
   - ${file(resource/client/topic.yml)}
+  - ${file(resource/client/queue.yml)}
+  - ${file(resource/client/policy.yml)}
   - ${file(resource/card/queue.yml)}
   - ${file(resource/card/policy.yml)}
   - ${file(resource/gift/queue.yml)}
   - ${file(resource/gift/policy.yml)}
+  - ${file(resource/purchase/table.yml)}

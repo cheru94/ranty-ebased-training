@@ -1,0 +1,27 @@
+CreatePurchase:
+  handler: src/purchase/handler/create-purchase.handler
+  name: ${self:service}-${self:provider.stage}-create-purchase-function
+  events:
+    - http:
+        path: /purchase/{dni}
+        method: post
+        cors: true
+        request:
+          parameters:
+            dni:
+              id: true
+  environment:
+    PURCHASE_TABLE: ${self:custom.environment.PURCHASES_TABLE_NAME}
+    AMOUNT_REACHED_TOPIC: !Ref AmountReachedTopic
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource:
+        - !Ref AmountReachedTopic
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource:
+        - !GetAtt PurchasesTable.Arn

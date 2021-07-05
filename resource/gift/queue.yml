@@ -1,9 +1,5 @@
 Resources:
-  CreateGiftQueue:
+  SetGiftQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: ${self:service}-${self:provider.stage}-create-gift-queue
-  UpdateGiftQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: ${self:service}-${self:provider.stage}-update-gift-queue
+      QueueName: ${self:service}-${self:provider.stage}-set-gift-queue

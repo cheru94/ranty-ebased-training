@@ -1,24 +1,9 @@
-CreateCard:
-  handler: src/card/handler/create-card.handler
-  name: ${self:service}-${self:provider.stage}-create-card-function
+SetCard:
+  handler: src/card/handler/set-card.handler
+  name: ${self:service}-${self:provider.stage}-set-card-function
   events:
     - sqs:
-        arn: !GetAtt CreateCardQueue.Arn
-  environment:
-    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
-  iamRoleStatementsInherit: true
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:UpdateItem
-      Resource:
-        - !GetAtt ClientsTable.Arn
-UpdateCard:
-  handler: src/card/handler/update-card.handler
-  name: ${self:service}-${self:provider.stage}-update-card-function
-  events:
-    - sqs:
-        arn: !GetAtt UpdateCardQueue.Arn
+        arn: !GetAtt SetCardQueue.Arn
   environment:
     CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
   iamRoleStatementsInherit: true

@@ -3,7 +3,7 @@ const { batchEventMapper } = require('ebased/handler');
 
 const inputMode = require('ebased/handler/input/batchEventQueue');
 const outputMode = require('ebased/handler/output/batchEventConfirmation');
-const { createCardDomain } = require('../domain/create-card.domain');
+const { setCardDomain } = require('../domain/set-card.domain');
 /**
  *
  * @param {*} command
@@ -15,6 +15,6 @@ module.exports.handler = async (events, context) =>
     { events, context },
     inputMode,
     // eslint-disable-next-line no-use-before-define
-    createCardDomain,
+    setCardDomain,
     outputMode
   );

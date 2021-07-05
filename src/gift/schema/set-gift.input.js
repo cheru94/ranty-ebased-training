@@ -1,20 +1,20 @@
 const { InputValidation } = require('ebased/schema/inputValidation');
 
-class UpdateCardValidation extends InputValidation {
+class SetGiftValidation extends InputValidation {
   constructor(payload, meta) {
     super({
       source: meta.source,
       payload,
-      type: 'CLIENT.UPDATE_CARD',
+      type: 'CLIENT.SET_GIFT',
       specversion: 'v1.0.0',
       schema: {
-        name: { type: String, required: true },
-        lastName: { type: String, required: true },
         dni: { type: String, required: true },
         birth: { type: String, required: true },
+        name: { type: String, required: false },
+        lastName: { type: String, required: false },
       },
     });
   }
 }
 
-module.exports = { UpdateCardValidation };
+module.exports = { SetGiftValidation };

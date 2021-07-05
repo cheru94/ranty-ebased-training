@@ -63,6 +63,8 @@ UpdateClient:
   handler: src/client/handler/update-client.handler
   name: ${self:service}-${self:provider.stage}-update-client-function
   events:
+    - sqs:
+        arn: !GetAtt UpdateClientQueue.Arn
     - http:
         path: /client/{dni}
         method: put

@@ -15,7 +15,7 @@ const updateClientService = async (commandPayload) => {
       ':birth': commandPayload.birth,
     },
     UpdateExpression: 'SET #nm = :name, #lm = :lastName, #bi = :birth',
-    RetunValues: 'UPDATED_CLIENT',
+    RetunValues: 'ALL_NEW',
   });
   return dynamoResponse;
 };

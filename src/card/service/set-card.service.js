@@ -1,6 +1,6 @@
 const dynamoDB = require('ebased/service/storage/dynamo');
 
-const updateCardService = async (
+const setCardService = async (
   eventPayload,
   creditCardNumber,
   expirationDate,
@@ -32,4 +32,4 @@ const updateCardService = async (
   return dynamoResponse;
 };
 
-module.exports = { updateCardService };
+module.exports = { setCardService };

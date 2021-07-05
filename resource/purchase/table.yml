@@ -1,0 +1,22 @@
+Resources:
+  PurchasesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.environment.PURCHASES_TABLE_NAME}
+      AttributeDefinitions:
+        - AttributeName: dni
+          AttributeType: S
+        - AttributeName: timestamp # id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: dni
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+## HERE THE PURCHASES-TABLE COULD HAVE THE NEXT ACCESS PATTERN
+## 1. GET ALL PURCHASES OF A CLIENT ID
+## 2. GET ALL PURCHASES OF A CLIENT ID & TIMESTAMP (RANGE OR EQUALITY)  [LSI]
+## 3. GET ALL PURCHASES OF A TIMESTAMP (RANGE OR EQUALITY)  [GSI]

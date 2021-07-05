@@ -32,10 +32,12 @@ const createClientDomain = async (commandPayload, commandMeta) => {
       },
     };
   }
-  await createClientService(commandPayload);
-  await publishCreatedClientService(
-    new ClientCreatedValidation(commandPayload, commandMeta)
-  );
+  await Promise.all([
+    createClientService(commandPayload),
+    publishCreatedClientService(
+      new ClientCreatedValidation(commandPayload, commandMeta)
+    ),
+  ]);
   return {
     statusCode: 200,
     body: {

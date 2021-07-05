@@ -2,8 +2,8 @@
 const { StatusCodes } = require('http-status-codes');
 
 const { createCreditCardInfo } = require('../helper/card.helper');
-const { CreateCardValidation } = require('../schema/input/create-card.input');
-const { createCardService } = require('../service/create-card.service');
+const { SetCardValidation } = require('../schema/input/set-card.input');
+const { setCardService } = require('../service/set-card.service');
 
 /**
  *
@@ -11,7 +11,7 @@ const { createCardService } = require('../service/create-card.service');
  * @param {*} eventMeta
  * @returns
  */
-const createCardDomain = async (eventPayload, eventMeta) => {
+const setCardDomain = async (eventPayload, eventMeta) => {
   // eslint-disable-next-line no-console
   try {
     // *****************************************************************
@@ -21,11 +21,11 @@ const createCardDomain = async (eventPayload, eventMeta) => {
     const { Message } = eventPayload;
     const message = JSON.parse(Message);
     // *****************************************************************
-    new CreateCardValidation(message, eventMeta);
+    new SetCardValidation(message, eventMeta);
     const { creditCardNumber, expirationDate, securityCode, type } =
       createCreditCardInfo(message.birth);
 
-    await createCardService(
+    await setCardService(
       message,
       creditCardNumber,
       expirationDate,
@@ -35,7 +35,7 @@ const createCardDomain = async (eventPayload, eventMeta) => {
     return {
       statusCode: StatusCodes.OK,
       body: {
-        message: 'Card added succesfully',
+        message: 'Card setted succesfully',
       },
     };
   } catch (error) {
@@ -50,4 +50,4 @@ const createCardDomain = async (eventPayload, eventMeta) => {
   }
 };
 
-module.exports = { createCardDomain };
+module.exports = { setCardDomain };

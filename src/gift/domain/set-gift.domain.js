@@ -2,8 +2,8 @@
 const { StatusCodes } = require('http-status-codes');
 
 const { giftChoser } = require('../helper/gift.helper');
-const { UpdateGiftValidation } = require('../schema/update-gift.input');
-const { updateGiftService } = require('../service/update-gift.service');
+const { SetGiftValidation } = require('../schema/set-gift.input');
+const { setGiftService } = require('../service/set-gift.service');
 
 /**
  *
@@ -11,24 +11,22 @@ const { updateGiftService } = require('../service/update-gift.service');
  * @param {*} eventMeta
  * @returns
  */
-const updateGiftDomain = async (eventPayload, eventMeta) => {
+const setGiftDomain = async (eventPayload, eventMeta) => {
   // eslint-disable-next-line no-console
   try {
     // *****************************************************************
-    // WHY MUST THIS BE MAPPED ?
-    // shouldn't be a lib responsability ¿?
-    // or im approaching wrong to the batchEventMapper  component of eBased ¿?
+    // MOVE THIS TO THE HANDLER LAYER
     const { Message } = eventPayload;
     const message = JSON.parse(Message);
     // *****************************************************************
-    new UpdateGiftValidation(message, eventMeta);
+    new SetGiftValidation(message, eventMeta);
     const { birth, dni } = message;
     const chosenGift = giftChoser(birth);
-    await updateGiftService(dni, chosenGift);
+    await setGiftService(dni, chosenGift);
     return {
       statusCode: StatusCodes.OK,
       body: {
-        message: 'Gift Updated succesfully',
+        message: 'Gift setted succesfully',
       },
     };
   } catch (error) {
@@ -43,4 +41,4 @@ const updateGiftDomain = async (eventPayload, eventMeta) => {
   }
 };
 
-module.exports = { updateGiftDomain };
+module.exports = { setGiftDomain };
