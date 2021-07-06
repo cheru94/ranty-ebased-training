@@ -26,9 +26,9 @@ const createClientDomain = async (commandPayload, commandMeta) => {
     calculateAge(commandPayload.birth) > 65
   ) {
     return {
-      statusCode: StatusCodes.BAD_REQUEST,
+      status: StatusCodes.BAD_REQUEST,
       body: {
-        message: 'Client must be under 65 years old',
+        message: 'Client must be in the range of age ( 18 - 65 )',
       },
     };
   }
