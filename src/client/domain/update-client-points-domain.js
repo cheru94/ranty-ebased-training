@@ -23,7 +23,7 @@ const updateClientPointsDomain = async (eventPayload, eventMeta) => {
   await updateClientPointService(message);
 
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       // eslint-disable-next-line quotes
       message: "Client point's updated succesfully",

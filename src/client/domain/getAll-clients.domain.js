@@ -13,7 +13,7 @@ const getAllClientDomain = async (commandPayload, commandMeta) => {
   const clients = await getAllClientsService(commandPayload);
 
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       message: clients,
     },

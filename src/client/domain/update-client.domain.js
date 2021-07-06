@@ -22,7 +22,7 @@ const updateClientDomain = async (commandPayload, commandMeta) => {
   // guard pattern
   if (!isClientsAgeInRange(commandPayload.birth)) {
     return {
-      statusCode: StatusCodes.BAD_REQUEST,
+      status: StatusCodes.BAD_REQUEST,
       body: {
         message: 'Client must be under 65 years old',
       },
@@ -33,7 +33,7 @@ const updateClientDomain = async (commandPayload, commandMeta) => {
     new ClientUpdatedValidation(commandPayload, commandMeta)
   );
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       message: 'Client updated succesfully',
     },

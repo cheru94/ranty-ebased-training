@@ -24,7 +24,7 @@ const setGiftDomain = async (eventPayload, eventMeta) => {
     const chosenGift = giftChoser(birth);
     await setGiftService(dni, chosenGift);
     return {
-      statusCode: StatusCodes.OK,
+      status: StatusCodes.OK,
       body: {
         message: 'Gift setted succesfully',
       },
@@ -33,7 +33,7 @@ const setGiftDomain = async (eventPayload, eventMeta) => {
     // eslint-disable-next-line no-console
     console.debug(error);
     return {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
       body: {
         message: error,
       },

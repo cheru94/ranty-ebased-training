@@ -33,7 +33,7 @@ const setCardDomain = async (eventPayload, eventMeta) => {
       type
     );
     return {
-      statusCode: StatusCodes.OK,
+      status: StatusCodes.OK,
       body: {
         message: 'Card setted succesfully',
       },
@@ -42,7 +42,7 @@ const setCardDomain = async (eventPayload, eventMeta) => {
     // eslint-disable-next-line no-console
     console.debug(error);
     return {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
       body: {
         message: error,
       },

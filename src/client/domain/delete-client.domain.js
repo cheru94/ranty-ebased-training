@@ -17,7 +17,7 @@ const deleteClientDomain = async (commandPayload, commandMeta) => {
   new DeleteClientValidation(commandPayload, commandMeta);
   await deleteClientService(commandPayload);
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       message: 'Client deleted succesfully',
     },

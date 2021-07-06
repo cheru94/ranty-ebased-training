@@ -13,7 +13,7 @@ const getByIdClientDomain = async (commandPayload, commandMeta) => {
   const clients = await getByIdClientService(commandPayload);
 
   return {
-    statusCode: StatusCodes.OK,
+    status: StatusCodes.OK,
     body: {
       message: clients,
     },
