@@ -47,6 +47,7 @@ const analyzeHandler = (command, context) => {
     domain = updateClientDomain;
     input = { command, context };
   } else {
+    // NOT THAT QUITE APPROPIATE TO SCALE, TODO: USE ANALYZE PATTERN
     // SQS WITH A SNS MESSAGE SCENARIO ASYNC METHOD
     inputMode = require('ebased/handler/input/batchEventQueue');
     outputMode = require('ebased/handler/output/batchEventConfirmation');
@@ -56,17 +57,8 @@ const analyzeHandler = (command, context) => {
       updateClientPointsDomain,
     } = require('../domain/update-client-points-domain');
     domain = updateClientPointsDomain;
-    // events = mapEvent(command);
     events = command;
     input = { events, context };
   }
   return { mapper, input, inputMode, outputMode, domain };
-};
-
-const mapEvent = (events) => {
-  const mappedEvent = events.map((event) => ({
-    ...event,
-    ...event.body,
-  }));
-  return {};
 };
