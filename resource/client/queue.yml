@@ -1,0 +1,5 @@
+Resources:
+  UpdateClientQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:service}-${self:provider.stage}-update-client-queue

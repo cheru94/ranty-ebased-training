@@ -1,0 +1,27 @@
+Resources:
+  CreateCardQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action:
+              - SQS:*
+            Resource: !GetAtt SetCardQueue.Arn
+            Principal:
+              AWS:
+                - !Ref AWS::AccountId
+          - Effect: Allow
+            Principal:
+              AWS:
+                - '*'
+            Action:
+              - SQS:SendMessage
+            Resource: !GetAtt SetCardQueue.Arn
+            Condition:
+              ArnLike:
+                aws:SourceArn:
+                  - !Ref ClientCreatedTopic
+                  - !Ref ClientUpdatedTopic
+      Queues:
+        - !Ref SetCardQueue

@@ -1,0 +1,111 @@
+CreateClient:
+  handler: src/client/handler/create-client.handler
+  name: ${self:service}-${self:provider.stage}-create-client-function
+  events:
+    - http:
+        path: /client
+        method: post
+        cors: true
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+    CLIENTS_CREATED_TOPIC: !Ref ClientCreatedTopic
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource:
+        - !Ref ClientCreatedTopic
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource:
+        - !GetAtt ClientsTable.Arn
+GetAllClients:
+  handler: src/client/handler/getAll-clients.handler
+  name: ${self:service}-${self:provider.stage}-getAll-clients-function
+  events:
+    - http:
+        path: /client
+        method: get
+        cors: true
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+      Resource:
+        - !GetAtt ClientsTable.Arn
+DeleteClient:
+  handler: src/client/handler/delete-client.handler
+  name: ${self:service}-${self:provider.stage}-delete-client-function
+  events:
+    - http:
+        path: /client/{dni}/inactivate
+        method: delete
+        cors: true
+        request:
+          parameters:
+            dni:
+              id: true
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn
+UpdateClient:
+  handler: src/client/handler/update-client.handler
+  name: ${self:service}-${self:provider.stage}-update-client-function
+  events:
+    - sqs:
+        arn: !GetAtt UpdateClientQueue.Arn
+    - http:
+        path: /client/{dni}
+        method: put
+        cors: true
+        request:
+          parameters:
+            dni:
+              id: true
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+    CLIENTS_UPDATED_TOPIC: !Ref ClientUpdatedTopic
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource:
+        - !Ref ClientUpdatedTopic
+GetByIdClient:
+  handler: src/client/handler/getById-client.handler
+  name: ${self:custom.environment.GET_CLIENT_BY_ID_LAMBDA_NAME}
+  events:
+    - http:
+        path: /client/{dni}
+        method: get
+        cors: true
+        request:
+          parameters:
+            dni:
+              id: true
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource:
+        - !GetAtt ClientsTable.Arn

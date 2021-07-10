@@ -1,0 +1,15 @@
+SetGift:
+  handler: src/gift/handler/set-gift.handler
+  name: ${self:service}-${self:provider.stage}-set-gift-function
+  events:
+    - sqs:
+        arn: !GetAtt SetGiftQueue.Arn
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn

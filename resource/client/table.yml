@@ -1,0 +1,14 @@
+Resources:
+  ClientsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.environment.CLIENTS_TABLE_NAME}
+      AttributeDefinitions:
+        - AttributeName: dni
+          AttributeType: S
+      KeySchema:
+        - AttributeName: dni
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1

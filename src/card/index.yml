@@ -1,0 +1,15 @@
+SetCard:
+  handler: src/card/handler/set-card.handler
+  name: ${self:service}-${self:provider.stage}-set-card-function
+  events:
+    - sqs:
+        arn: !GetAtt SetCardQueue.Arn
+  environment:
+    CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
+  iamRoleStatementsInherit: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource:
+        - !GetAtt ClientsTable.Arn

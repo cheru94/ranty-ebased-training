@@ -15,6 +15,9 @@ provider:
 custom:
   environment:
     CLIENTS_TABLE_NAME: ${self:service}-${self:provider.stage}-client-table
+    PURCHASES_TABLE_NAME: ${self:service}-${self:provider.stage}-purchase-table
+    GET_CLIENT_BY_ID_LAMBDA_NAME: ${self:service}-${self:provider.stage}-getById-client-function
+    GET_CLIENT_BY_ID_LAMBDA_ARN: arn:aws:lambda:us-east-1:225462417943:function:ranty-ebased-training-dev-getById-client-function
   # only for local environment to use the dynamoDB plugin
   # dynamodb:
   #   stages:
@@ -30,6 +33,8 @@ custom:
 
 package:
   exclude:
+    - .eslintrc.js
+    - .prettierrc.json
     - .gitignore
     - .npmignore
     - .package-lock.json
@@ -39,147 +44,18 @@ package:
     - dynamo-seeds/*
 
 functions:
-  CreateClient:
-    handler: create-client/handler/create-client.handler
-    name: ${self:service}-${self:provider.stage}-create-client-function
-    events:
-      - http:
-          path: /client
-          method: post
-          cors: true
-    environment:
-      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
-      CLIENTS_CREATED_TOPIC: !Ref ClientCreatedTopic
-    iamRoleStatementsInherit: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - sns:Publish
-        Resource:
-          - !Ref ClientCreatedTopic
-      - Effect: Allow
-        Action:
-          - dynamodb:PutItem
-        Resource:
-          - !GetAtt ClientsTable.Arn
-
-  CreateCard:
-    handler: create-card/create-card.handler
-    name: ${self:service}-${self:provider.stage}-create-card-function
-    events:
-      - sqs:
-          arn: !GetAtt CreateCardQueue.Arn
-    environment:
-      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
-    iamRoleStatementsInherit: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:UpdateItem
-        Resource:
-          - !GetAtt ClientsTable.Arn
-
-  CreateGift:
-    handler: create-gift/create-gift.handler
-    name: ${self:service}-${self:provider.stage}-create-gift-function
-    events:
-      - sqs:
-          arn: !GetAtt CreateGiftQueue.Arn
-    environment:
-      CLIENTS_TABLE: ${self:custom.environment.CLIENTS_TABLE_NAME}
-    iamRoleStatementsInherit: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:UpdateItem
-        Resource:
-          - !GetAtt ClientsTable.Arn
+  - ${file(src/client/index.yml)}
+  - ${file(src/card/index.yml)}
+  - ${file(src/gift/index.yml)}
+  - ${file(src/purchase/index.yml)}
 
 resources:
-  Resources:
-    ClientsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.environment.CLIENTS_TABLE_NAME}
-        AttributeDefinitions:
-          - AttributeName: dni
-            AttributeType: S
-        KeySchema:
-          - AttributeName: dni
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
-    ClientCreatedTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: Client Created Topic
-        TopicName: ${self:service}-${self:provider.stage}-client-created-topic
-        Subscription:
-          - Protocol: sqs
-            Endpoint: !GetAtt CreateCardQueue.Arn
-          - Protocol: sqs
-            Endpoint: !GetAtt CreateGiftQueue.Arn
-
-    CreateCardQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: ${self:service}-${self:provider.stage}-create-card-queue
-
-    CreateCardQueuePolicy:
-      Type: AWS::SQS::QueuePolicy
-      Properties:
-        PolicyDocument:
-          Statement:
-            - Effect: Allow
-              Action:
-                - SQS:*
-              Resource: !GetAtt CreateCardQueue.Arn
-              Principal:
-                AWS:
-                  - !Ref AWS::AccountId
-            - Effect: Allow
-              Principal:
-                AWS:
-                  - '*'
-              Action:
-                - SQS:SendMessage
-              Resource: !GetAtt CreateCardQueue.Arn
-              Condition:
-                ArnLike:
-                  aws:SourceArn:
-                    - !Ref ClientCreatedTopic
-        Queues:
-          - !Ref CreateCardQueue
-
-    CreateGiftQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: ${self:service}-${self:provider.stage}-create-gift-queue
-
-    CreateGiftQueuePolicy:
-      Type: AWS::SQS::QueuePolicy
-      Properties:
-        PolicyDocument:
-          Statement:
-            - Effect: Allow
-              Action:
-                - SQS:*
-              Resource: !GetAtt CreateGiftQueue.Arn
-              Principal:
-                AWS:
-                  - !Ref AWS::AccountId
-            - Effect: Allow
-              Principal:
-                AWS:
-                  - '*'
-              Action:
-                - SQS:SendMessage
-              Resource: !GetAtt CreateGiftQueue.Arn
-              Condition:
-                ArnLike:
-                  aws:SourceArn:
-                    - !Ref ClientCreatedTopic
-        Queues:
-          - !Ref CreateGiftQueue
+  - ${file(resource/client/table.yml)}
+  - ${file(resource/client/topic.yml)}
+  - ${file(resource/client/queue.yml)}
+  - ${file(resource/client/policy.yml)}
+  - ${file(resource/card/queue.yml)}
+  - ${file(resource/card/policy.yml)}
+  - ${file(resource/gift/queue.yml)}
+  - ${file(resource/gift/policy.yml)}
+  - ${file(resource/purchase/table.yml)}
